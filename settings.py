@@ -8,3 +8,5 @@ class DevelopmentConfig(Config):
 
 class ProductionConfig(Config):
     ENV = 'production'
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = 'sqlite:///db.sqlite3'
