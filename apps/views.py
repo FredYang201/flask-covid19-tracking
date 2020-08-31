@@ -39,7 +39,7 @@ def get_time():
 
 @bp.route("/c1")
 def get_c1_data():
-    histories = History.query.order_by(-History.ds).first()
+    histories = History.query.order_by(History.ds.desc()).first()
     return jsonify({"confirm": str(round(histories.confirm/1000, 0)) + 'k',
                     "suspect": str(round(histories.suspect/1000, 0)) + 'k',
                     "heal": str(round(histories.heal/1000, 0)) + 'k',
@@ -49,7 +49,7 @@ def get_c1_data():
 
 @bp.route("/c2")
 def get_c2_data():
-    mostRecent = Details.query.order_by(-Details.update_time).first().update_time
+    mostRecent = Details.query.order_by(Details.update_time.desc()).first().update_time
     confirms = (db.session.query(Details.state, func.sum(Details.confirm)) 
                          .filter(and_(Details.update_time == mostRecent, not_(Details.state.in_(['AS', 'DC','GU', 'MP', 'PR', 'VI'])))) 
                          .group_by(Details.state)
@@ -62,7 +62,7 @@ def get_c2_data():
 
 @bp.route("/l1")
 def get_l1_data():
-    histories = db.session.query(History).order_by(-History.ds).all()
+    histories = db.session.query(History).order_by(History.ds.desc()).all()
     days = [each.ds.strftime(r'%m-%d') for each in histories]
     confirms = [each.confirm if each.confirm is not None else 0 for each in histories]
     suspects = [each.suspect if each.suspect is not None else 0 for each in histories]
@@ -73,7 +73,7 @@ def get_l1_data():
 
 @bp.route("/l2")
 def get_l2_data():
-    histories = History.query.order_by(-History.ds).all()
+    histories = History.query.order_by(History.ds.desc()).all()
     days = [each.ds.strftime(r'%m-%d') for each in histories]
     confirm_adds = [each.confirm_add if each.confirm_add is not None else 0 for each in histories]
     suspect_adds = [each.suspect_add if each.suspect_add is not None else 0 for each in histories]
@@ -82,7 +82,7 @@ def get_l2_data():
 
 @bp.route("/r1")
 def get_r1_data():
-    mostRecent = Details.query.order_by(-Details.update_time).first().update_time
+    mostRecent = Details.query.order_by(Details.update_time.desc()).first().update_time
 
     top5 = Details.query.filter(Details.update_time == mostRecent).order_by(-Details.confirm).limit(5)
 

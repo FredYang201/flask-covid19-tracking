@@ -5,13 +5,13 @@ from .views import bp
 
 def create_app():
     app = Flask(__name__, static_folder='../static', template_folder='../templates')
-    # app.config.from_object(settings.DevelopmentConfig)
-    app.config.from_object(settings.ProductionConfig)
+    app.config.from_object(settings.DevelopmentConfig)
+    # app.config.from_object(settings.ProductionConfig)
     app.register_blueprint(bp)
 
     db.init_app(app=app)
 
-    with app.app_context():
-        db.create_all()
+    # with app.app_context():
+    #     db.create_all()
 
     return app
